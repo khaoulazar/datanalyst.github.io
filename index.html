@@ -336,9 +336,15 @@
 							var target = this.getAttribute('data-page');
 							showPage(target);
 							history.replaceState(null, '', '#' + target);
+
+							// Close the off-canvas sidebar panel (opens on narrower
+							// window widths) since we're no longer doing a real page
+							// navigation to trigger its normal auto-close.
+							document.body.classList.remove('sidebar-visible', 'navPanel-visible', 'is-menu-visible');
 						});
 					});
 
+					// Support direct links like index.html#page-time-series
 					if (window.location.hash) {
 						var id = window.location.hash.substring(1);
 						if (document.getElementById(id)) {
