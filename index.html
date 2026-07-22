@@ -333,14 +333,21 @@
 					links.forEach(function (link) {
 						link.addEventListener('click', function (e) {
 							e.preventDefault();
+							// Stop this click from also reaching main.js's own sidebar
+							// link handler — that handler checks href, sees "#", and
+							// bails out before it can close the sidebar, which was the bug.
+							e.stopPropagation();
+
 							var target = this.getAttribute('data-page');
 							showPage(target);
 							history.replaceState(null, '', '#' + target);
 
-							// Close the off-canvas sidebar panel (opens on narrower
-							// window widths) since we're no longer doing a real page
-							// navigation to trigger its normal auto-close.
-							document.body.classList.remove('sidebar-visible', 'navPanel-visible', 'is-menu-visible');
+							// Close the sidebar panel directly using the real class
+							// main.js uses ("inactive" = hidden, on <=large breakpoints).
+							var sidebarEl = document.getElementById('sidebar');
+							if (sidebarEl) {
+								sidebarEl.classList.add('inactive');
+							}
 						});
 					});
 
