@@ -9,6 +9,7 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 	</head>
 	<body class="is-preload">
@@ -288,7 +289,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Système Statistique National au Maroc</h1></header>
 									<p id="pdf-loading-jpo" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-jpo" style="width: 100%; max-width: 800px;"></div>
+									<div id="pdf-container-jpo" style="width: 100%; max-width: 600px;"></div>
 								</article>
 							</div>
 
@@ -518,7 +519,12 @@
 
 							(function (slot, num) {
 								pdf.getPage(num).then(function (page) {
-									var outputScale = window.devicePixelRatio || 1;
+									// Cap at 1.5 instead of the full devicePixelRatio (which can be
+								// 2, 3, or more on high-DPI screens/phones) — beyond that point
+								// the extra sharpness isn't noticeable but it makes the canvas
+								// far larger and much slower to render, which was the main
+								// cause of the reports feeling slow for visitors.
+								var outputScale = Math.min(window.devicePixelRatio || 1, 1.5);
 									var scale = 1.2;
 									var viewport = page.getViewport({ scale: scale });
 
