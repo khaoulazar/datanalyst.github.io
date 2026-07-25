@@ -434,6 +434,23 @@
 				}
 			</style>
 
+			<!-- Force all PDF report containers to stay horizontally centered,
+			     regardless of any conflicting rule in main.css (the Editorial
+			     theme). Using !important here because inline margin:0 auto on
+			     the narrower containers (labor-market, JPO) was being
+			     overridden on the live site. -->
+			<style>
+				#pdf-container-report-sales,
+				#pdf-container-monitoring,
+				#pdf-container-labor-market,
+				#pdf-container-ppt,
+				#pdf-container-jpo {
+					display: block !important;
+					margin-left: auto !important;
+					margin-right: auto !important;
+				}
+			</style>
+
 			<!-- Darken the site's default gray body text slightly and bump its size,
 			     across every paragraph on the site — titles (h1/h2/h3) are never
 			     targeted here, only <p> text. Text that already has its own inline
