@@ -236,7 +236,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Bridging the Gap: Vocational Training Graduates and Labor Market Access</h1></header>
 									<p id="pdf-loading-labor-market" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-labor-market" style="width: 100%;"></div>
+									<div id="pdf-container-labor-market" style="width: 100%; max-width: 1000px;"></div>
 								</article>
 							</div>
 
@@ -244,7 +244,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Data Quality & Field Progress Report</h1></header>
 									<p id="pdf-loading-monitoring" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-monitoring" style="width: 100%;"></div>
+									<div id="pdf-container-monitoring" style="width: 100%; max-width: 1000px;"></div>
 								</article>
 							</div>
 
@@ -252,7 +252,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Sales performance Report in Power BI</h1></header>
 									<p id="pdf-loading-report-sales" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-report-sales" style="width: 100%;"></div>
+									<div id="pdf-container-report-sales" style="width: 100%; max-width: 1000px;"></div>
 								</article>
 							</div>
 
@@ -330,7 +330,7 @@
 									<header class="major">
 										<h2>Get in touch</h2>
 									</header>
-									<p>Thank you for visiting my portfolio website. Feel free to explore more about my work. Whether you are a potential employer or just someone with similar interests, I'm excited to share my journey with you.<br>If you have any questions or if there's a project you'd like to discuss, please don't hesitate to get in touch through the contact form below.</p>
+									<p>Thank you for visiting my portfolio website. Feel free to explore more about my work. Whether you are a potential employer or someone with similar interests, I'm excited to share my journey with you.<br>If you have any questions or if there's a project you'd like to discuss, please don't hesitate to get in touch through the contact form below.</p>
 									<ul class="contact">
 										<li class="icon solid fa-envelope"><a href="mailto:zarouale.khaoula@gmail.com">zarouale.khaoula@gmail.com</a></li>
 										<li class="icon solid fa-phone">(+212) 6 96 48 42 32</li>
@@ -384,6 +384,16 @@
 					visibility: visible !important;
 					opacity: 1 !important;
 					pointer-events: auto !important;
+				}
+			</style>
+
+			<!-- Darken the site's default gray body text slightly and bump its size
+			     a bit, without touching headings, buttons, or text that already has
+			     its own inline color (like the French subtitle, which stays black). -->
+			<style>
+				#main p, #sidebar p {
+					color: #555555 !important;
+					font-size: 1.05em;
 				}
 			</style>
 
@@ -489,7 +499,7 @@
 
 							var target = this.getAttribute('data-page');
 							showPage(target);
-							history.replaceState(null, '', '#' + target);
+							history.pushState(null, '', '#' + target);
 
 							// Close the sidebar panel directly using the real class
 							// main.js uses ("inactive" = hidden, on <=large breakpoints).
@@ -520,6 +530,17 @@
 							showPage(id);
 						}
 					}
+
+					// Handle the browser's back/forward buttons — since navigation
+					// now uses pushState (each click adds a real history entry),
+					// going back/forward needs to re-sync the visible section to
+					// whatever hash the browser lands on.
+					window.addEventListener('popstate', function () {
+						var hashId = window.location.hash.substring(1) || 'page-home';
+						if (document.getElementById(hashId)) {
+							showPage(hashId);
+						}
+					});
 				});
 			</script>
 
