@@ -36,8 +36,8 @@
 									<section id="banner">
 										<div class="content">
 											<header>
-												<h1>Hi, I'm KHAOULA<br />
-												Data Analyst</h1>
+												<h1><span class="banner-line-name">Hi, I'm KHAOULA</span><br />
+												<span class="banner-line-role">Data Analyst</span></h1>
 											</header>
 											<p> As a data analyst | statistician, I dive into data with a healthy dose of scepticism and strategic thinking to turn it into compelling insights.<br> My goal is to identify areas of improvement and help the stakeholders to make the right data-driven decisions. <br> I gained hands-on experience conducting statistical analysis and supporting social and economic projects at Morocco's national statistics institute, the <a href="https://www.data4sdgs.org/partner/hcp-high-commission-planning-morocco" target="_blank" style="color:#555555; font-weight:normal; text-decoration:none; display:inline-block; padding:2px 10px; background:#fff; border-radius:6px; box-shadow:0 2px 6px rgba(0,0,0,0.2); transition:box-shadow 0.2s ease;" onmouseover="this.style.boxShadow='0 4px 10px rgba(0,0,0,0.3)'" onmouseout="this.style.boxShadow='0 2px 6px rgba(0,0,0,0.2)'">High Commission for Planning&nbsp;&#8599;</a>.
 											<br><br> I use SQL, POWER BI , EXCEL, PYTHON, R, SPSS and EVIEWS.
@@ -257,7 +257,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Sales Performance Dashboard in Power BI</h1></header>
 									<p id="pdf-loading-report-sales" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-report-sales" style="width: 100%; max-width: 1000px;"></div>
+									<div id="pdf-container-report-sales" style="width: 100%; max-width: 1500px; margin: 0 auto;"></div>
 								</article>
 							</div>
 
@@ -265,7 +265,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Data Quality & Field Progress Dashboard</h1></header>
 									<p id="pdf-loading-monitoring" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-monitoring" style="width: 100%; max-width: 1000px;"></div>
+									<div id="pdf-container-monitoring" style="width: 100%; max-width: 1500px; margin: 0 auto;"></div>
 								</article>
 							</div>
 
@@ -273,7 +273,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Accès des lauréats de la formation professionnelle au marché du travail au Maroc</h1></header>
 									<p id="pdf-loading-labor-market" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-labor-market" style="width: 100%; max-width: 1700px;"></div>
+									<div id="pdf-container-labor-market" style="width: 100%; max-width: 1050px; margin: 0 auto;"></div>
 								</article>
 							</div>
 
@@ -281,7 +281,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">PPT Presentation</h1></header>
 									<p id="pdf-loading-ppt" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-ppt" style="width: 100%; max-width: 800px;"></div>
+									<div id="pdf-container-ppt" style="width: 100%; max-width: 700px; margin: 0 auto;"></div>
 								</article>
 							</div>
 
@@ -289,7 +289,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Système Statistique National au Maroc</h1></header>
 									<p id="pdf-loading-jpo" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-jpo" style="width: 100%; max-width: 750px;"></div>
+									<div id="pdf-container-jpo" style="width: 100%; max-width: 750px; margin: 0 auto;"></div>
 								</article>
 							</div>
 
@@ -401,6 +401,11 @@
 				window.addEventListener('load', forceSidebarClosed);
 			</script>
 
+			<!-- (Global page scale removed — it was shrinking the homepage
+			     content too, which didn't need it; report page sizes are
+			     already controlled independently via their own max-width
+			     settings on each pdf-container.) -->
+
 			<!-- The toggle link ("3 lines") that main.js creates lives inside
 			     #sidebar. The template's own CSS only shows/keeps it usable at
 			     narrow (<=large) breakpoints — at wider widths it was designed to
@@ -414,6 +419,18 @@
 					visibility: visible !important;
 					opacity: 1 !important;
 					pointer-events: auto !important;
+				}
+			</style>
+
+			<!-- "Hi, I'm KHAOULA" and "Data Analyst" (both inside the same banner
+			     <h1>, split by a <br>) now use separate classes so their sizes
+			     can be set independently. -->
+			<style>
+				#banner h1 span.banner-line-name {
+					font-size: 1.8em !important;
+				}
+				#banner h1 span.banner-line-role {
+					font-size: 2.5em !important;
 				}
 			</style>
 
@@ -508,30 +525,20 @@
 						}
 
 						for (var pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-							// Reserve this page's slot in the container immediately, in the
-							// correct order, before its render finishes. Pages render
-							// asynchronously and can finish out of order, so appending
-							// directly on completion (instead of into a pre-placed slot)
-							// was causing pages to appear in the wrong order.
 							var pageSlot = document.createElement('div');
 							pageSlot.setAttribute('data-page-num', pageNum);
 							container.appendChild(pageSlot);
 
 							(function (slot, num) {
 								pdf.getPage(num).then(function (page) {
-									// Cap at 1.5 instead of the full devicePixelRatio (which can be
-								// 2, 3, or more on high-DPI screens/phones) — beyond that point
-								// the extra sharpness isn't noticeable but it makes the canvas
-								// far larger and much slower to render, which was the main
-								// cause of the reports feeling slow for visitors.
-								var outputScale = Math.min(window.devicePixelRatio || 1, 1.5);
+									var outputScale = Math.min(window.devicePixelRatio || 1, 1.5);
 									var scale = 1.2;
 									var viewport = page.getViewport({ scale: scale });
 
 									var canvas = document.createElement('canvas');
 									canvas.style.display = 'block';
 									canvas.style.marginBottom = '15px';
-									canvas.style.width = Math.floor(viewport.width) + 'px';
+									canvas.style.width = '100%';
 									canvas.style.height = 'auto';
 									canvas.style.maxWidth = '100%';
 									canvas.width = Math.floor(viewport.width * outputScale);
@@ -586,25 +593,17 @@
 					links.forEach(function (link) {
 						link.addEventListener('click', function (e) {
 							e.preventDefault();
-							// Stop this click from also reaching main.js's own sidebar
-							// link handler — that handler checks href, sees "#", and
-							// bails out before it can close the sidebar, which was the bug.
 							e.stopPropagation();
 
 							var target = this.getAttribute('data-page');
 							showPage(target);
 							history.pushState(null, '', '#' + target);
 
-							// Close the sidebar panel directly using the real class
-							// main.js uses ("inactive" = hidden, on <=large breakpoints).
 							var sidebarEl = document.getElementById('sidebar');
 							if (sidebarEl) {
 								sidebarEl.classList.add('inactive');
 							}
 
-							// If this link points to a specific section within the page
-							// (e.g. "Projects" scrolling to the projects section on the
-							// homepage), scroll to it once the page has rendered.
 							var scrollTargetId = this.getAttribute('data-scroll-to');
 							if (scrollTargetId) {
 								var scrollTargetEl = document.getElementById(scrollTargetId);
@@ -617,7 +616,6 @@
 						});
 					});
 
-					// Support direct links like index.html#page-time-series
 					if (window.location.hash) {
 						var id = window.location.hash.substring(1);
 						if (document.getElementById(id)) {
@@ -625,10 +623,6 @@
 						}
 					}
 
-					// Handle the browser's back/forward buttons — since navigation
-					// now uses pushState (each click adds a real history entry),
-					// going back/forward needs to re-sync the visible section to
-					// whatever hash the browser lands on.
 					window.addEventListener('popstate', function () {
 						var hashId = window.location.hash.substring(1) || 'page-home';
 						if (document.getElementById(hashId)) {
@@ -654,7 +648,6 @@
 							e.preventDefault();
 							e.stopPropagation();
 							var isOpen = submenu.style.display === 'block';
-							// Close any other open submenu first.
 							openers.forEach(function (other) {
 								var otherSubmenu = other.nextElementSibling;
 								if (otherSubmenu) otherSubmenu.style.display = 'none';
