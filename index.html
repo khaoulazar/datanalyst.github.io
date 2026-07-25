@@ -129,7 +129,7 @@
 												<a href="#" data-page="page-dashboard-sales-performance" class="image"><img src="images/[PROJECT IMAGE].jpg" alt="" /></a>
 												<h2>Interactive Sales Analytics Dashboard</h2>
 												<h3> Power BI</h3>
-												<p>An interactive Power BI dashboard to analyze sales performance across products, regions, customers, and time. The report enables stakeholders to monitor key KPIs, identify sales trends, evaluate profitability, and make data-driven business decisions through dynamic filtering, drill-down capabilities, and interactive visualizations.</p>
+												<p>Designed and developed an interactive Power BI dashboard to analyze sales performance across products, regions, customers, and time. The report enables stakeholders to monitor key KPIs, identify sales trends, evaluate profitability, and make data-driven business decisions through dynamic filtering, drill-down capabilities, and interactive visualizations.</p>
 												<ul class="tech-badges" style="list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 10px 0;">
 													<li style="background: #eee; padding: 4px 10px; border-radius: 12px; font-size: 0.8em;">Power BI</li>
 													<li style="background: #eee; padding: 4px 10px; border-radius: 12px; font-size: 0.8em;">Power Query</li>
@@ -180,11 +180,11 @@
 							</div>
 							<!-- ============ END HOMEPAGE SECTION ============ -->
 
-							<!-- ============ PRINCIPAL COMPONENT ANALYSIS TOPIC SECTIONS ============ -->
-							<div id="page-Principal-component-analysis" class="page-section" style="display:none">
+							<!-- ============ DATA SCIENCE TOPIC SECTIONS ============ -->
+							<div id="page-what-is-data-science" class="page-section" style="display:none">
 								<article>
-									<header class="major"><h1>Principal component analysis PCA</h1></header>
-									<p>[Write your content about "Principal component analysis" here.]</p>
+									<header class="major"><h1>What is data science?</h1></header>
+									<p>[Write your content about "What is data science?" here.]</p>
 								</article>
 							</div>
 
@@ -229,12 +229,13 @@
 									<p>[Write your content about "Logistic regression" here.]</p>
 								</article>
 							</div>
-							<!-- ============ END PRINCIPAL COMPONENT ANALYSIS TOPIC SECTIONS ============ -->
+							<!-- ============ END DATA SCIENCE TOPIC SECTIONS ============ -->
 
 							<!-- ============ PROJECT DETAIL SECTIONS ============ -->
 							<div id="page-project-labor-market" class="page-section" style="display:none">
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Bridging the Gap: Vocational Training Graduates and Labor Market Access</h1></header>
+									<p id="pdf-loading-labor-market" style="color:#888;">Loading report…</p>
 									<div id="pdf-container-labor-market" style="width: 100%;"></div>
 								</article>
 							</div>
@@ -242,6 +243,7 @@
 							<div id="page-project-dashboard-monitoring" class="page-section" style="display:none">
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Data Quality & Field Progress Report</h1></header>
+									<p id="pdf-loading-monitoring" style="color:#888;">Loading report…</p>
 									<div id="pdf-container-monitoring" style="width: 100%;"></div>
 								</article>
 							</div>
@@ -249,6 +251,7 @@
 							<div id="page-dashboard-sales-performance" class="page-section" style="display:none">
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Sales performance Report in Power BI</h1></header>
+									<p id="pdf-loading-report-sales" style="color:#888;">Loading report…</p>
 									<div id="pdf-container-report-sales" style="width: 100%;"></div>
 								</article>
 							</div>
@@ -299,7 +302,7 @@
 										<li>
 											<span class="opener">Data analytics topics</span>
 											<ul>
-												<li><a href="#" data-page="page-principal-component-analysis">Principal component analysis PCA</a></li>
+												<li><a href="#" data-page="page-what-is-data-science">What is data science?</a></li>
 												<li><a href="#" data-page="page-data-mining-process">Data mining process</a></li>
 												<li><a href="#" data-page="page-data-visualization">Data Visualization</a></li>
 												<li><a href="#" data-page="page-cluster-analysis">Cluster Analysis</a></li>
@@ -392,14 +395,25 @@
 				pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 				var renderedPdfs = {};
 
-				function renderPdfInto(containerId, pdfUrl) {
+				function renderPdfInto(containerId, pdfUrl, loadingId) {
 					if (renderedPdfs[containerId]) return;
 					renderedPdfs[containerId] = true;
 
 					var container = document.getElementById(containerId);
 					if (!container) return;
 
+					var loadingEl = loadingId ? document.getElementById(loadingId) : null;
+
 					pdfjsLib.getDocument(pdfUrl).promise.then(function (pdf) {
+						var remainingPages = pdf.numPages;
+
+						function onPageRendered() {
+							remainingPages--;
+							if (remainingPages <= 0 && loadingEl) {
+								loadingEl.style.display = 'none';
+							}
+						}
+
 						for (var pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
 							// Reserve this page's slot in the container immediately, in the
 							// correct order, before its render finishes. Pages render
@@ -428,12 +442,14 @@
 									slot.appendChild(canvas);
 									var ctx = canvas.getContext('2d');
 									var transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-									page.render({ canvasContext: ctx, viewport: viewport, transform: transform });
+									var renderTask = page.render({ canvasContext: ctx, viewport: viewport, transform: transform });
+									renderTask.promise.then(onPageRendered);
 								});
 							})(pageSlot, pageNum);
 						}
 					}).catch(function (err) {
 						container.innerHTML = '<p>Could not load the report. <a href="' + pdfUrl + '" target="_blank">Open it directly instead</a>.</p>';
+						if (loadingEl) loadingEl.style.display = 'none';
 						console.error('PDF load error (' + pdfUrl + '):', err);
 					});
 				}
@@ -453,13 +469,13 @@
 						window.scrollTo(0, 0);
 
 						if (id === 'page-project-dashboard-monitoring') {
-							renderPdfInto('pdf-container-monitoring', 'files/smart-monitoring-report.pdf');
+							renderPdfInto('pdf-container-monitoring', 'files/smart-monitoring-report.pdf', 'pdf-loading-monitoring');
 						}
 						if (id === 'page-project-labor-market') {
-							renderPdfInto('pdf-container-labor-market', 'files/labor-market-report.pdf');
+							renderPdfInto('pdf-container-labor-market', 'files/labor-market-report.pdf', 'pdf-loading-labor-market');
 						}
 						if (id === 'page-dashboard-sales-performance') {
-							renderPdfInto('pdf-container-report-sales', 'files/report-sales.pdf');
+							renderPdfInto('pdf-container-report-sales', 'files/report-sales.pdf', 'pdf-loading-report-sales');
 						}
 					}
 
