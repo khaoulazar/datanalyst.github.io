@@ -280,7 +280,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">PPT Presentation</h1></header>
 									<p id="pdf-loading-ppt" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-ppt" style="width: 100%; max-width: 1000px;"></div>
+									<div id="pdf-container-ppt" style="width: 100%; max-width: 800px;"></div>
 								</article>
 							</div>
 
@@ -288,7 +288,7 @@
 								<article>
 									<header class="major"><h1 style="font-size: 1.8em;">Système Statistique National au Maroc</h1></header>
 									<p id="pdf-loading-jpo" style="color:#888;">Loading report…</p>
-									<div id="pdf-container-jpo" style="width: 100%; max-width: 1000px;"></div>
+									<div id="pdf-container-jpo" style="width: 100%; max-width: 800px;"></div>
 								</article>
 							</div>
 
@@ -519,7 +519,7 @@
 							(function (slot, num) {
 								pdf.getPage(num).then(function (page) {
 									var outputScale = window.devicePixelRatio || 1;
-									var scale = 1.5;
+									var scale = 1.2;
 									var viewport = page.getViewport({ scale: scale });
 
 									var canvas = document.createElement('canvas');
